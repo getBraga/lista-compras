@@ -1,6 +1,7 @@
 <template>
-  <section class="section">
-    <div class="columns is-mobile"></div>
+  <section>
+    <div class=" is-mobile">
+    </div>
   </section>
 </template>
 
@@ -10,3 +11,6 @@ export default {
   components: {},
 }
 </script>
+<style  lang="scss">
+
+</style>
