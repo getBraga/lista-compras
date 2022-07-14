@@ -1,11 +1,18 @@
+// @import "autoload/global";
 @import "common/global";
+// @import "components/global";
+@import "core/global";
 
+.focus-in-contract-bck {
+  font-size: 3rem;
+  color: #fff;
 
+}
 
 /* GERAL */
 body {
-  // background-color: $cor-body;
-  min-height: 100vh;
+  background-color: #f4f4f6;
+
   padding-bottom: 20px;
 
   html.has-navbar-fixed-top,
@@ -23,16 +30,85 @@ body {
   }
 
   &::-webkit-scrollbar-thumb {
-    background: #008040;
+    background: #ac6c47;
     border-radius: 8px;
   }
+}
+
+/* Transition Page CSS */
+.page-enter-active,
+.page-leave-active {
+  transition: opacity 0.2s;
+}
+
+.page-enter,
+.page-leave-to {
+  opacity: 0;
+}
+
+.result_text {
+  padding-bottom: 9px;
+  margin-left: 6px;
+  margin-top: 19px;
+  margin-bottom: 16px;
+  border-bottom: 1px solid #e0e0e0;
+
+  strong {
+    color: $orange-pb;
+    font-size: 20px;
+    margin: 0px 5px;
+  }
+}
+
+.btn-shadow {
+  box-shadow: 1px 3px 9px 0px rgba(115, 157, 136, 0.55);
+}
+
+.tag span {
+  font-weight: 600;
+  top: 2px;
+}
+
+/* Blur para overlay sidebar*/
+.b-sidebar .sidebar-background {
+  background: rgba(0, 0, 0, 0.39);
+  backdrop-filter: blur(3px);
 }
 
 /*  RESPONSIVE  */
 
 @media only screen and (max-width: 768px) {
+ 
 
+  .navbar.is-fixed-top {
+    top: 0;
+    padding: 11px 0px;
+    display: block;
+    margin-bottom: 60px;
+  }
 
+  .breadcrumb {
+    display: none;
+  }
+
+  h1 {
+    display: block;
+    line-height: 1.2;
+    margin: 50px 11px 6px 11px;
+    font-size: 1.9rem;
+  }
+
+  h4 {
+    margin-bottom: 15px !important;
+
+    strong {
+      font-size: 1.2rem;
+    }
+  }
+
+  h6 {
+    padding: 1px 12px;
+  }
 
   .subnavigation-mobile {
     display: table;
@@ -43,6 +119,15 @@ body {
     margin: 30px auto;
   }
 
+  /*ajuste no titulo de seção*/
+  .title-left {
+    position: relative;
+    top: -2px;
+    left: 10px;
+  }
+  .title-left {
+    font-size: 1rem;
+  }
 
   /*Fix control table responsive*/
   .b-table {
@@ -69,3 +154,5 @@ body {
 .b-tabs .tab-content {
   padding-left: 0 !important;
 }
+
+

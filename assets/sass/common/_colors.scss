@@ -1,4 +1,38 @@
 /* Oficial Colors*/
-$cor-principal: #fa8e4e;
-$cor-body: #3f3229;
-$cor-texto: #f7f2f2;
+$orange-pb: #ac6c47;
+$yellow-pb: #fdca30;
+$blue-pb: #006298;
+$black: #000;
+$white: #fff;
+
+/*Darker*/
+$orange-pb-darken: darken($orange-pb, 6%);
+$yellow-pb-darken: darken($yellow-pb, 6%);
+$blue-pb-darken: darken($blue-pb, 6%);
+
+/*lighten*/
+$orange-pb-lighten: lighten($orange-pb, 6%);
+$yellow-pb-lighten: lighten($yellow-pb, 6%);
+$blue-pb-lighten: lighten($blue-pb, 6%);
+
+$gray-dark: #675c53;
+$gray: #ccc;
+$gray-light: #bcbdbc;
+$gray-lighten: #f9f9f9;
+
+/* Cores Apoio */
+$verde-agua: #00b2a9;
+$verde-claro: #a8b400;
+$amarelo-claro: #fedf00;
+$laranja: #e17000;
+$blue-escuro: #004165;
+$azul-claro: #7d9aaa;
+
+$cols-dest: #f7f7f7;
+
+$quase-preto: #3a3a3a;
+
+/* Gradiente orange */
+$bg-g-orange-wk: -webkit-linear-gradient(left,
+    var($orange-pb) 50%,
+    var($verde-claro) 100%);
