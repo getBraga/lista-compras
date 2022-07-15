@@ -1,38 +1,35 @@
 <template>
-  <div>
-    <TheHeader id="the_header" />
-
-    <!-- @detected-condition fires when the connectivity status of the device changes -->
-
-    <div class="container">
-      <div class="section pt-5">
-        <nuxt />
-      </div>
+  <div class="main">
+    <div>
+      <TheHeader id="the_header" />
     </div>
-    <a
-      v-show="windowTop > 400"
-     
-      class="btn-scroll-top"
-        title="Rolar para o início da página" 
-       @click="scrollTo"
-    
-    >
-      <b-icon icon="chevron-up" size="is-medium"></b-icon>
-    </a>
-    <!-- <TheMenuMobileBottom /> -->
+    <div>
+      <div class="container">
+        <div class="section pt-5">
+          <nuxt />
+        </div>
+      </div>
+      <a
+        v-show="windowTop > 400"
+        class="btn-scroll-top"
+        title="Rolar para o início da página"
+        @click="scrollTo"
+      >
+        <b-icon icon="chevron-up" size="is-medium"></b-icon>
+      </a>
+    </div>
+    <Footer></Footer>
   </div>
 </template>
 
 <script>
 import TheHeader from '~/components/Navigation/TheHeader'
-// import TheMenuMobileBottom from '~/components/Navigation/TheMenuMobileBottom'
-
+import Footer from '~/components/Footer/Footer'
 export default {
   name: 'TelaDefault',
   components: {
     TheHeader,
-    // TheMenuMobileBottom,
-    // offline
+    Footer,
   },
 
   data() {
@@ -53,58 +50,19 @@ export default {
     },
     scrollTo() {
       window.scrollTo({
-          top: 0,
-          behavior: "smooth",
-        });
-    }
+        top: 0,
+        behavior: 'smooth',
+      })
+    },
   },
 }
 </script>
 <style lang="scss">
-body {
-  height: 200vh;
-}
-.btn-scroll-top {
-  border-radius: 100%;
-  border: 0px;
-  // #ac6c47
-  background-color: #ac6c47;
-  position: fixed;
-  width: 51px;
-  bottom: 65px;
-  right: 107px;
-  height: 53px;
-  box-shadow: 0px 10px 20px rgba(160, 160, 160, 0.69);
-  i {
-    color: #fff;
-    position: relative;
-    top: 10px;
-    left: 9px;
-  }
-  &:active {
-    border: 0px;
-  }
-}
--webkit-scrollbar {
-    width: 8px;
-    &::-webkit-scrollbar-track {
-    background: #cccccc;
-    border-radius: 8px;
-  }
-  &::-webkit-scrollbar-thumb {
-    background: #008040;
-    border-radius: 8px;
-  }
-  }
-  
-.msg_off_on {
-  p {
-    padding: 20px 0px 8px;
-  }
-  color: #fff;
-  margin: 0px;
-  background: #006298;
-  text-align: center;
+.main {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 100vh;
 }
 
 @import '~/assets/sass/app.scss';
