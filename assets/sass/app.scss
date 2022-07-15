@@ -12,9 +12,6 @@
 /* GERAL */
 body {
   background-color: #f4f4f6;
-
-  padding-bottom: 20px;
-
   html.has-navbar-fixed-top,
   body.has-navbar-fixed-top {
     padding-top: 0px;
@@ -30,7 +27,7 @@ body {
   }
 
   &::-webkit-scrollbar-thumb {
-    background: #ac6c47;
+    background: #703211;
     border-radius: 8px;
   }
 }
@@ -78,7 +75,7 @@ body {
 /*  RESPONSIVE  */
 
 @media only screen and (max-width: 768px) {
- 
+
 
   .navbar.is-fixed-top {
     top: 0;
