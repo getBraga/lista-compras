@@ -1,8 +1,7 @@
 <template>
   <section>
-    <div class=" is-mobile">
-      
-       <b-button  type="is-primary">aaaaaaaa</b-button>
+    <div class="is-mobile">
+      <!-- <b-button  type="is-primary">aaaaaaaa</b-button> -->
     </div>
   </section>
 </template>
@@ -13,6 +12,4 @@ export default {
   components: {},
 }
 </script>
-<style  lang="scss">
-
-</style>
+<style lang="scss"></style>
