@@ -1,6 +1,6 @@
 
   [build]
   command = "npm run build"
-  commandOrigin= "ui"
-  publish = "out"
+  commandOrigin= "config"
+  publish = "/opt/build/repo/dist"
 
