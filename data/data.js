@@ -87,28 +87,4 @@ const data = [
   },
 ]
 
-const columns = [
-  {
-    field: 'nome_produto',
-    label: 'Nome do Produto',
-    searchable: true,
-    sortable: true,
-  },
-  {
-    field: 'preco_produto',
-    label: 'Preço do Produto',
-    sortable: true,
-  },
-  {
-    field: 'quantidade',
-    label: 'Quantidade',
-    sortable: true,
-  },
-  {
-    field: 'preco_total',
-    label: 'Preço Total',
-    sortable: true,
-  },
-]
-
-export { data, columns, criarId }
+export { data }
