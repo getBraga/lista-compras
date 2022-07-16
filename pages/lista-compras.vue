@@ -1,35 +1,74 @@
-<!-- eslint-disable vue/no-lone-template -->
 <template>
   <section>
+    <b-button type="is-primary" class="mb-20 mt-10">Novo item</b-button>
+
     <b-table :data="data" sticky-checkbox striped paginated :per-page="10">
-      <template class="is-primary">
-        <b-table-column
-          v-for="column in columns"
-          :key="column.id"
-          v-bind="column"
-        >
-          <template
-            v-if="column.searchable && !column.numeric"
-            #searchable="props"
-          >
-            <b-input
-              v-model="props.filters[props.column.field]"
-              placeholder="Search..."
-              icon="magnify"
-              size="is-small"
-            />
-          </template>
-          <template #default="props">
-            {{ props.row[column.field] }}
-          </template>
-        </b-table-column>
+      <b-table-column
+        v-slot="props"
+        searchable
+        sortable
+        field="nome_produto"
+        label="Nome do Produto"
+      >
+        {{ props.row.nome_produto }}
+      </b-table-column>
+
+      <b-table-column
+        v-slot="props"
+        sortable
+        field="preco_produto"
+        label="Preço do Produto"
+      >
+        {{ props.row.preco_produto }}
+      </b-table-column>
+
+      <b-table-column
+        v-slot="props"
+        field="quantidade"
+        label="Quantidade"
+        sortable
+      >
+        {{ props.row.quantidade }}
+      </b-table-column>
+
+      <b-table-column
+        v-slot="props"
+        field="preco_total"
+        label="Preço Total"
+        sortable
+      >
+        {{ props.row.preco_total }}
+      </b-table-column>
+      <b-table-column
+        v-slot="props"
+        field="excluir_produto"
+        label="Excluir"
+        centered
+      >
+        <b-button class="btn-icon" @click="excluir(props.row)"
+          ><b-icon icon="delete" type="is-primary" size="is-medium"> </b-icon
+        ></b-button>
+      </b-table-column>
+      <b-table-column
+        field="atualzar_produto"
+        label="Atualizar Produto"
+        centered
+      >
+        <b-button class="btn-icon" @click="excluir(props.row)"
+          ><b-icon icon="pencil" type="is-primary" size="is-medium"> </b-icon
+        ></b-button>
+      </b-table-column>
+      <template #empty>
+        <div class="has-text-centered">
+          <strong>Nenhum produto cadastrado </strong>
+        </div>
       </template>
     </b-table>
   </section>
 </template>
 
 <script>
-import { columns, data } from '@/data/data'
+import { data } from '@/data/data'
 export default {
   data() {
     return {
@@ -37,35 +76,17 @@ export default {
       sortOrder: 'desc',
       defaultSortOrder: 'desc',
       data: [],
-      columns: [],
-      // columns: [
-      //   {
-      //     field: 'nome_produto',
-      //     label: 'Nome do Produto',
-      //     searchable: true,
-      //     sortable: true,
-      //   },
-      //   {
-      //     field: 'preco_produto',
-      //     label: 'Preço do Produto',
-      //     sortable: true,
-      //   },
-      //   {
-      //     field: 'quantidade',
-      //     label: 'Quantidade',
-      //     sortable: true,
-      //   },
-      //   {
-      //     field: 'preco_total',
-      //     label: 'Preço Total',
-      //     sortable: true,
-      //   },
-      // ],
     }
   },
   mounted() {
     this.data = data
-    this.columns = columns
+  },
+  methods: {
+    excluir(data) {
+      this.data = []
+      // eslint-disable-next-line no-console
+      console.log(data)
+    },
   },
 }
 </script>
