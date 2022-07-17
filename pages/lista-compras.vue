@@ -10,7 +10,7 @@
         field="nome_produto"
         label="Nome do Produto"
       >
-        {{ props.row.nome_produto }}
+        <b-input v-model="props.row.nome_produto" disabled />
       </b-table-column>
 
       <b-table-column
@@ -19,7 +19,7 @@
         field="preco_produto"
         label="Preço do Produto"
       >
-        {{ props.row.preco_produto }}
+        <b-input v-model="props.row.preco_produto" disabled />
       </b-table-column>
 
       <b-table-column
@@ -28,7 +28,7 @@
         label="Quantidade"
         sortable
       >
-        {{ props.row.quantidade }}
+        <b-input v-model="props.row.quantidade" disabled />
       </b-table-column>
 
       <b-table-column
@@ -37,7 +37,7 @@
         label="Preço Total"
         sortable
       >
-        {{ props.row.preco_total }}
+        <b-input v-model="props.row.preco_total" />
       </b-table-column>
       <b-table-column
         v-slot="props"
@@ -50,6 +50,7 @@
         ></b-button>
       </b-table-column>
       <b-table-column
+        v-slot="props"
         field="atualzar_produto"
         label="Atualizar Produto"
         centered
@@ -83,7 +84,7 @@ export default {
   },
   methods: {
     excluir(data) {
-      this.data = []
+      // this.data = []
       // eslint-disable-next-line no-console
       console.log(data)
     },
