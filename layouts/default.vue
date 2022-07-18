@@ -9,14 +9,16 @@
           <nuxt />
         </div>
       </div>
-      <a
-        v-show="windowTop > 400"
-        class="btn-scroll-top"
-        title="Rolar para o início da página"
-        @click="scrollTo"
-      >
-        <b-icon icon="chevron-up" size="is-medium"></b-icon>
-      </a>
+      <!-- <div class="div-icon">
+        <a
+          v-show="windowTop > 400"
+          class="btn-scroll-top"
+          title="Rolar para o início da página"
+          @click="scrollTo"
+        >
+          <b-icon icon="chevron-up" type="is-white" size="is-medium"></b-icon>
+        </a>
+      </div> -->
     </div>
     <Footer></Footer>
   </div>
@@ -58,6 +60,26 @@ export default {
 }
 </script>
 <style lang="scss">
+.div-icon {
+  max-width: 960px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: flex-end;
+}
+.btn-scroll-top {
+  // position: fixed;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  // background: #703211;
+  background: #ac6c47;
+  &:hover {
+    background: #703211;
+  }
+}
 .main {
   display: flex;
   flex-direction: column;
@@ -70,7 +92,9 @@ export default {
 
 // Set your colors
 $primary: $orange-pb;
+$second: $gray-pb;
 $primary-invert: findColorInvert($primary);
+$second-invert: findColorInvert($second);
 $twitter: #4099ff;
 $twitter-invert: findColorInvert($twitter);
 $colors: (
@@ -93,6 +117,10 @@ $colors: (
   'primary': (
     $primary,
     $primary-invert,
+  ),
+  'second': (
+    $second,
+    $second-invert,
   ),
   'info': (
     $info,
@@ -117,6 +145,7 @@ $colors: (
 );
 $link: $primary;
 $link-invert: $primary-invert;
+$link-invert: $second-invert;
 $link-focus-border: $primary;
 @import '~bulma';
 @import '~buefy/src/scss/buefy';
