@@ -7,6 +7,7 @@ const data = [
     preco_produto: 16,
     quantidade: 1,
     preco_total: 16,
+    podeAlterar: false,
   },
   {
     id: criarId(),
@@ -14,6 +15,7 @@ const data = [
     preco_produto: 7.5,
     quantidade: 3,
     preco_total: 22.5,
+    podeAlterar: false,
   },
   {
     id: criarId(),
@@ -21,6 +23,7 @@ const data = [
     preco_produto: 2.8,
     quantidade: 3,
     preco_total: 8.4,
+    podeAlterar: false,
   },
   {
     id: criarId(),
@@ -28,6 +31,7 @@ const data = [
     preco_produto: 7,
     quantidade: 1,
     preco_total: 7,
+    podeAlterar: false,
   },
   {
     id: criarId(),
@@ -35,6 +39,7 @@ const data = [
     preco_produto: 3,
     quantidade: 4,
     preco_total: 12,
+    podeAlterar: false,
   },
   {
     id: criarId(),
@@ -42,6 +47,7 @@ const data = [
     preco_produto: 2.5,
     quantidade: 2,
     preco_total: 5,
+    podeAlterar: false,
   },
   {
     id: criarId(),
@@ -49,6 +55,7 @@ const data = [
     preco_produto: 8,
     quantidade: 4,
     preco_total: 32,
+    podeAlterar: false,
   },
   {
     id: criarId(),
@@ -56,6 +63,7 @@ const data = [
     preco_produto: 14,
     quantidade: 2,
     preco_total: 28,
+    podeAlterar: false,
   },
   {
     id: criarId(),
@@ -63,6 +71,7 @@ const data = [
     preco_produto: 4,
     quantidade: 2,
     preco_total: 8,
+    podeAlterar: false,
   },
   {
     id: criarId(),
@@ -70,6 +79,7 @@ const data = [
     preco_produto: 8,
     quantidade: 1,
     preco_total: 8,
+    podeAlterar: false,
   },
   {
     id: criarId(),
@@ -77,6 +87,7 @@ const data = [
     preco_produto: 17,
     quantidade: 1,
     preco_total: 17,
+    podeAlterar: false,
   },
   {
     id: criarId(),
@@ -84,6 +95,7 @@ const data = [
     preco_produto: 3,
     quantidade: 3,
     preco_total: 9,
+    podeAlterar: false,
   },
 ]
 
