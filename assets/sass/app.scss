@@ -3,6 +3,18 @@
 // @import "components/global";
 @import "core/global";
 
+.icon-primary:hover {
+  color: #703211 !important;
+}
+.icon-lixeira {
+  color: #565252 !important;
+  &:hover {
+    color: #ac6c47 !important;
+  }
+}
+.close-icon:hover {
+  color: #776161 !important
+}
 .focus-in-contract-bck {
   font-size: 3rem;
   color: #fff;
