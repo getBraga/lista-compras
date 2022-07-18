@@ -2,6 +2,7 @@
 $orange-pb: #ac6c47;
 $yellow-pb: #fdca30;
 $blue-pb: #006298;
+$gray-pb: #938282;
 $black: #000;
 $white: #fff;
 
@@ -9,11 +10,13 @@ $white: #fff;
 $orange-pb-darken: darken($orange-pb, 6%);
 $yellow-pb-darken: darken($yellow-pb, 6%);
 $blue-pb-darken: darken($blue-pb, 6%);
+$gray-pb-darken: darken($gray-pb, 6%);
 
 /*lighten*/
 $orange-pb-lighten: lighten($orange-pb, 6%);
 $yellow-pb-lighten: lighten($yellow-pb, 6%);
 $blue-pb-lighten: lighten($blue-pb, 6%);
+$gray-pb-darken: lighten($gray-pb, 6%);
 
 $gray-dark: #675c53;
 $gray: #ccc;
