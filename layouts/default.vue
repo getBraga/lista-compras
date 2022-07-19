@@ -2,13 +2,13 @@
   <div class="main">
     <div>
       <TheHeader id="the_header" />
-    </div>
-    <div>
       <div class="container">
         <div class="section pt-5">
           <nuxt />
         </div>
       </div>
+    </div>
+    <div>
       <!-- <div class="div-icon">
         <a
           v-show="windowTop > 400"
