@@ -45,7 +45,8 @@
 </template>
 
 <script>
-import { money } from '@/plugin/money'
+import { money } from '~/mixins/money'
+
 export default {
   props: {
     modal: {
