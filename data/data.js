@@ -1,28 +1,28 @@
-import criarId from '../plugin/idRandom'
+import criarId from '../mixins/idRandom'
 
 const data = [
   {
     id: criarId(),
     nome_produto: 'Arroz',
-    preco_produto: '22.8',
-    quantidade: '22',
-    preco_total: '22.8',
+    preco_produto: '10',
+    quantidade: '2',
+    preco_total: '0',
     podeAlterar: false,
   },
   {
     id: criarId(),
     nome_produto: 'Feijão',
-    preco_produto: '22.8',
-    quantidade: '22',
-    preco_total: '22.8',
+    preco_produto: '6.99',
+    quantidade: '3',
+    preco_total: '0',
     podeAlterar: false,
   },
   {
     id: criarId(),
     nome_produto: 'Macarrão',
-    preco_produto: '22.8',
-    quantidade: '22',
-    preco_total: '22.8',
+    preco_produto: '3.00',
+    quantidade: '1',
+    preco_total: '0',
     podeAlterar: false,
   },
   {
@@ -30,23 +30,23 @@ const data = [
     nome_produto: 'Batata Frita',
     preco_produto: '22.8',
     quantidade: '1',
-    preco_total: '22.8',
+    preco_total: '0',
     podeAlterar: false,
   },
   {
     id: criarId(),
     nome_produto: 'Açucar',
-    preco_produto: '22.8',
+    preco_produto: '5',
     quantidade: '4',
-    preco_total: '22.8',
+    preco_total: '0',
     podeAlterar: false,
   },
   {
     id: criarId(),
     nome_produto: 'Sal',
-    preco_produto: '22.8',
+    preco_produto: '4',
     quantidade: 2,
-    preco_total: 5,
+    preco_total: 0,
     podeAlterar: false,
   },
   {
@@ -54,7 +54,7 @@ const data = [
     nome_produto: 'Óleo',
     preco_produto: 8,
     quantidade: 4,
-    preco_total: 32,
+    preco_total: 0,
     podeAlterar: false,
   },
   {
