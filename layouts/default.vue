@@ -60,13 +60,13 @@ export default {
 }
 </script>
 <style lang="scss">
-.div-icon {
+.div_icon {
   max-width: 960px;
   margin: 0 auto;
   display: flex;
   justify-content: flex-end;
 }
-.btn-scroll-top {
+.btn_scroll_top {
   // position: fixed;
   display: flex;
   justify-content: center;
