@@ -2,20 +2,22 @@
 @import "common/global";
 // @import "components/global";
 @import "core/global";
-
-.icon-primary:hover {
+.color_principal {
+  color: #ac6c47;
+}
+.icon_primary:hover {
   color: #703211 !important;
 }
-.icon-lixeira {
+.icon_lixeira {
   color: #565252 !important;
   &:hover {
     color: #ac6c47 !important;
   }
 }
-.close-icon:hover {
+.close_icon:hover {
   color: #776161 !important
 }
-.focus-in-contract-bck {
+.focus_in_contract_bck {
   font-size: 3rem;
   color: #fff;
 
@@ -24,8 +26,8 @@
 /* GERAL */
 body {
   background-color: #f4f4f6;
-  html.has-navbar-fixed-top,
-  body.has-navbar-fixed-top {
+  html.has_navbar_fixed_top,
+  body.has_navbar_fixed_top {
     padding-top: 0px;
   }
 
@@ -45,13 +47,13 @@ body {
 }
 
 /* Transition Page CSS */
-.page-enter-active,
-.page-leave-active {
+.page_enter_active,
+.page_leave_active {
   transition: opacity 0.2s;
 }
 
-.page-enter,
-.page-leave-to {
+.page_enter,
+.page_leave_to {
   opacity: 0;
 }
 
@@ -69,27 +71,21 @@ body {
   }
 }
 
-.btn-shadow {
-  box-shadow: 1px 3px 9px 0px rgba(115, 157, 136, 0.55);
-}
+
 
 .tag span {
   font-weight: 600;
   top: 2px;
 }
 
-/* Blur para overlay sidebar*/
-.b-sidebar .sidebar-background {
-  background: rgba(0, 0, 0, 0.39);
-  backdrop-filter: blur(3px);
-}
+
 
 /*  RESPONSIVE  */
 
 @media only screen and (max-width: 768px) {
 
 
-  .navbar.is-fixed-top {
+  .navbar.is_fixed_top {
     top: 0;
     padding: 11px 0px;
     display: block;
@@ -119,7 +115,7 @@ body {
     padding: 1px 12px;
   }
 
-  .subnavigation-mobile {
+  .subnavigation_mobile {
     display: table;
     text-align: center;
     -webkit-box-align: center;
@@ -128,15 +124,7 @@ body {
     margin: 30px auto;
   }
 
-  /*ajuste no titulo de seção*/
-  .title-left {
-    position: relative;
-    top: -2px;
-    left: 10px;
-  }
-  .title-left {
-    font-size: 1rem;
-  }
+  
 
   /*Fix control table responsive*/
   .b-table {
@@ -164,7 +152,7 @@ body {
   padding-left: 0 !important;
 }
 
-.btn-icon {
+.btn_icon {
   background: none;
   border: none;
 }

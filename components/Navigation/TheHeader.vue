@@ -2,7 +2,7 @@
   <div>
     <b-navbar id="navbar" fixed-top spaced type="is-white" shadow>
       <template slot="brand">
-        <b-navbar-item id="navbar-logo" tag="router-link" to="/">
+        <b-navbar-item id="navbar_logo" tag="router-link" to="/">
           <strong>Home</strong>
         </b-navbar-item>
       </template>
@@ -11,14 +11,14 @@
 
       <template slot="end">
         <b-navbar-item
-          id="navbar-item"
+          id="navbar_item"
           tag="router-link"
           to="/lista-compras"
           class="mr-10"
         >
           <span>Lista de Compras</span>
         </b-navbar-item>
-        <b-navbar-item id="navbar-item" tag="router-link" to="/adiciona-saldo">
+        <b-navbar-item id="navbar_item" tag="router-link" to="/adiciona-saldo">
           <span>Adicionar Saldo</span>
         </b-navbar-item>
       </template>
@@ -35,7 +35,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-#navbar-logo {
+#navbar_logo {
   font-size: 1.2rem;
   text-transform: uppercase;
   color: #ac6c47;
@@ -48,7 +48,7 @@ export default {
     color: #7f4427;
   }
 }
-#navbar-item {
+#navbar_item {
   &:hover {
     background: none;
     color: #ac6c47;

@@ -1,9 +1,5 @@
 <template>
-  <section>
-    <div class="is-mobile">
-      <!-- <b-button  type="is-primary">aaaaaaaa</b-button> -->
-    </div>
-  </section>
+  <section></section>
 </template>
 
 <script>
