@@ -115,7 +115,7 @@
 <script>
 import { data } from '@/data/data'
 import ModalIncluirListaVue from '~/components/ModalIncluirLista.vue'
-import idRandom from '@/plugin/idRandom'
+import idRandom from '~/mixins/idRandom'
 export default {
   components: {
     ModalIncluirListaVue,
@@ -148,7 +148,7 @@ export default {
   methods: {
     excluir(data) {
       this.$buefy.dialog.confirm({
-        title: 'Deleting account',
+        title: 'Deletar item',
         message: `Tem certeza que deseja excluir o item ${data.nome_produto}?`,
         confirmText: 'Deletar',
         type: 'is-danger',
