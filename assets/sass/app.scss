@@ -1,9 +1,33 @@
-// @import "autoload/global";
+
 @import "common/global";
 // @import "components/global";
 @import "core/global";
+strong {
+  color: #ac6c47;
+}
+.h1_titulo {
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+}
+.color_red{
+  color: #ff3232;
+}
+h1 {
+  display: block;
+  color: #ac6c47;
+  line-height: 1.2;
+  margin: 50px 11px 20px 0px;
+  font-size: 2.5rem;
+}
+h2 {
+  color: #ac6c47;
+  margin: 50px 11px 20px 0px;
+  font-size: 1.9rem;
+}
 .color_principal {
   color: #ac6c47;
+  // font-size: 3rem;
 }
 .icon_primary:hover {
   color: #703211 !important;
