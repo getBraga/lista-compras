@@ -88,6 +88,11 @@ export default {
   },
 
   watch: {
+    modal() {
+      this.nomeProdutoValue = this.nomeLista
+      this.precoValue = this.preco
+      this.quantidadeValue = this.quantidade
+    },
     nomeProdutoValue() {
       this.$emit('update:nomeLista', this.nomeProdutoValue)
     },
