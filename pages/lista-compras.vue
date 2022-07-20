@@ -1,5 +1,10 @@
 <template>
   <section>
+    <div class="h1_titulo">
+      <h1>
+        <strong>Lista de compras</strong>
+      </h1>
+    </div>
     <b-button type="is-primary" class="mb_20 mt_10" @click="modal = true"
       >Novo item</b-button
     >
@@ -33,7 +38,7 @@
         <span v-if="!props.row.podeAlterar">{{
           moedaLocal(+props.row.preco_produto)
         }}</span>
-        <b-input v-else v-model="alterarPreco" />
+        <b-input v-else v-model="alterarPreco" v-money="money" />
       </b-table-column>
 
       <b-table-column
@@ -43,13 +48,11 @@
         sortable
       >
         <span v-if="!props.row.podeAlterar">{{ props.row.quantidade }}</span>
-        <b-input v-else v-model="alterarQuantidade" />
+        <b-input v-else v-model="alterarQuantidade" type="number" min="1" />
       </b-table-column>
 
       <b-table-column v-slot="props" field="preco_total" label="Total" sortable>
-        <span>{{
-          moedaLocal(+props.row.preco_produto * +props.row.quantidade)
-        }}</span>
+        <span>{{ moedaLocal(props.row.preco_total) }}</span>
       </b-table-column>
       <b-table-column v-slot="props" field="excluir_produto" label="Excluir">
         <b-button class="btn_icon" @click="excluir(props.row)"
@@ -103,12 +106,18 @@
           ></b-button>
         </div>
       </b-table-column>
+
       <template #empty>
         <div class="has_text_centered">
           <strong>Nenhum produto cadastrado </strong>
         </div>
       </template>
     </b-table>
+    <h2 class="color_red">Total gasto {{ total }}</h2>
+    <h2 class="mt_5">Para gastar {{ moedaLocal(gastar) }}</h2>
+    <h2 class="mt_5" :class="saldo < 0 ? 'color_red' : ''">
+      Saldo {{ moedaLocal(saldo) }}
+    </h2>
   </section>
 </template>
 
@@ -116,6 +125,8 @@
 import { data } from '@/data/data'
 import ModalIncluirListaVue from '~/components/ModalIncluirLista.vue'
 import idRandom from '~/mixins/idRandom'
+import { money } from '~/mixins/money'
+
 export default {
   components: {
     ModalIncluirListaVue,
@@ -134,6 +145,8 @@ export default {
         preco_total: '0',
         podeAlterar: false,
       },
+      gastar: 630,
+
       alterarNome: null,
       alterarPreco: null,
       alterarQuantidade: null,
@@ -141,8 +154,28 @@ export default {
     }
   },
 
+  computed: {
+    money() {
+      return money
+    },
+    total() {
+      let total = 0
+      for (const index in this.data) {
+        total += +this.data[index].preco_total
+      }
+      return this.moedaLocal(total)
+    },
+    saldo() {
+      return this.gastar - +this.regexFormater(this.total)
+    },
+  },
+
   mounted() {
-    this.data = data
+    this.ordenar(data)
+    if (!window.localStorage.listaCompras) {
+      window.localStorage.setItem('listaCompras', JSON.stringify(data))
+    }
+    this.data = JSON.parse(window.localStorage.getItem('listaCompras'))
   },
 
   methods: {
@@ -156,6 +189,7 @@ export default {
         onConfirm: () => {
           this.data.splice(this.data.indexOf(data), 1)
           this.$buefy.toast.open('Item deletado!')
+          window.localStorage.setItem('listaCompras', JSON.stringify(this.data))
         },
       })
     },
@@ -176,10 +210,12 @@ export default {
     alterar(data) {
       const index = this.data.indexOf(data)
       data.nome_produto = this.alterarNome
-      data.preco_produto = this.alterarPreco
+      data.preco_produto = this.regexFormater(this.alterarPreco)
       data.quantidade = this.alterarQuantidade
+      data.preco_total = data.preco_produto * data.quantidade
       this.data[index] = data
       data.podeAlterar = false
+      window.localStorage.setItem('listaCompras', JSON.stringify(this.data))
     },
     fecharModal() {
       this.modal = false
@@ -194,15 +230,23 @@ export default {
         currency: 'BRL',
       })
     },
+    ordenar(item) {
+      item.sort((a, b) =>
+        a.nome_produto.toLowerCase() > b.nome_produto.toLowerCase()
+          ? 1
+          : b.nome_produto.toLowerCase() > a.nome_produto.toLowerCase()
+          ? -1
+          : 0
+      )
+    },
     incluirLista() {
       const valor = +this.regexFormater(this.incluirInfo.preco_produto)
-      // const quantidade = +this.incluirInfo.quantidade
-      this.incluirInfo.preco_produto = valor
-      // this.incluirInfo.quantidade = quantidade
-      // this.incluirInfo.preco_total =
-      //   +this.incluirInfo.preco_produto * +quantidade
+      const quantidade = +this.incluirInfo.quantidade
+      this.incluirInfo.preco_produto = `${valor}.00`
+      this.incluirInfo.preco_total = +valor * +quantidade
       this.incluirInfo.id = idRandom()
-      this.data.unshift(this.incluirInfo)
+      this.data.push(this.incluirInfo)
+      this.ordenar(this.data)
       this.incluirInfo = {
         nome_produto: '',
         preco_produto: '0',
@@ -210,12 +254,14 @@ export default {
         preco_total: '0',
         podeAlterar: false,
       }
+      window.localStorage.setItem('listaCompras', JSON.stringify(this.data))
       this.modal = false
     },
   },
 }
 </script>
-<style scoped>
+
+<style>
 .icon-atualizar {
   display: flex;
 }
