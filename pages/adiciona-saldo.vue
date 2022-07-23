@@ -5,7 +5,7 @@
         <strong>Adicionar Saldo</strong>
       </h1>
     </div>
-    {{ lista }}
+    <!-- {{ lista }} -->
     <b-button type="is-primary" class="mb_20 mt_10">Novo item</b-button>
   </section>
 </template>
