@@ -3,10 +3,10 @@ export const state = () => ({
   lista: [],
 })
 export const mutations = {
-  GETDADOS(state, payload) {
+  GET_DADOS(state, payload) {
     state.lista = payload
   },
-  UPDATEDADOS(state, payload) {
+  UPDATE_DADOS(state, payload) {
     state.lista = payload
   },
   DELETAR_LISTA(state, payload) {
@@ -21,4 +21,7 @@ export const actions = {
       JSON.parse(window.localStorage.getItem('listaCompras'))
     )
   },
+  // getLista({ commit }) {
+  //   commit('GET_DADOS', JSON.parse(window.localStorage.getItem('listaCompras')))
+  // },
 }

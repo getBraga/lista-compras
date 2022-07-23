@@ -16,9 +16,18 @@
       :nome-lista.sync="incluirInfo.nome_produto"
       :preco.sync="incluirInfo.preco_produto"
       :quantidade.sync="incluirInfo.quantidade"
-    />
+    >
+    </ModalIncluirListaVue>
 
-    <b-table :data="data" sticky-checkbox striped paginated :per-page="10">
+    <b-table
+      id="tabela"
+      :data="data"
+      sticky-checkbox
+      striped
+      paginated
+      :per-page="10"
+      sort="asc"
+    >
       <b-table-column
         v-slot="props"
         searchable
@@ -36,10 +45,13 @@
         field="preco_produto"
         label="Preço"
       >
-        <span v-if="!props.row.podeAlterar">{{
-          moedaLocal(+props.row.preco_produto)
-        }}</span>
-        <b-input v-else v-model="alterarPreco" v-money="money" />
+        <span v-if="!props.row.podeAlterar">
+          {{ moedaLocal(props.row.preco_produto) }}
+        </span>
+        <!-- <span v-if="!props.row.podeAlterar">
+          <b-input v-model="props.row.preco_produto" v-money="money" />
+        </span> -->
+        <b-input v-else v-model.lazy="alterarPreco" v-money="money" />
       </b-table-column>
 
       <b-table-column
@@ -123,7 +135,7 @@
 </template>
 
 <script>
-import { dados } from '@/data/data'
+import { dados } from '@/data/dados'
 import ModalIncluirListaVue from '~/components/ModalIncluirLista.vue'
 import idRandom from '~/mixins/idRandom'
 import { money } from '~/mixins/money'
@@ -134,9 +146,6 @@ export default {
   },
   data() {
     return {
-      sortField: 'nome_produto',
-      sortOrder: 'desc',
-      defaultSortOrder: 'desc',
       data: [],
       incluirInfo: {
         id: idRandom(),
@@ -179,7 +188,7 @@ export default {
 
     this.data = JSON.parse(window.localStorage.getItem('listaCompras'))
     this.$store.commit(
-      'GETDADOS',
+      'GET_DADOS',
       JSON.parse(window.localStorage.getItem('listaCompras'))
     )
   },
@@ -206,8 +215,9 @@ export default {
           inf.podeAlterar = false
         }
       })
+
       this.alterarNome = data.nome_produto
-      this.alterarPreco = data.preco_produto
+      this.alterarPreco = this.moedaLocal(data.preco_produto)
       this.alterarQuantidade = data.quantidade
       data.podeAlterar = true
     },
@@ -216,21 +226,24 @@ export default {
     },
     alterar(data) {
       const index = this.data.indexOf(data)
+      const regexPreco = this.regexFormater(this.alterarPreco)
       data.nome_produto = this.alterarNome
-      data.preco_produto = this.regexFormater(this.alterarPreco)
+      data.preco_produto = this.alterarPreco
       data.quantidade = this.alterarQuantidade
-      data.preco_total = data.preco_produto * data.quantidade
+
+      data.preco_total = +regexPreco * data.quantidade
       this.data[index] = data
       data.podeAlterar = false
       window.localStorage.setItem('listaCompras', JSON.stringify(this.data))
       this.$store.commit(
-        'UPDATEDADOS',
+        'UPDATE_DADOS',
         JSON.parse(window.localStorage.getItem('listaCompras'))
       )
     },
     fecharModal() {
       this.modal = false
     },
+
     regexFormater(valor) {
       const regex = /[.]/gi
       return valor.replace('R$', '').replace(regex, '').replace(',', '.')
@@ -253,9 +266,9 @@ export default {
     incluirLista() {
       const valor = +this.regexFormater(this.incluirInfo.preco_produto)
       const quantidade = +this.incluirInfo.quantidade
-      this.incluirInfo.preco_produto = `${valor}.00`
       this.incluirInfo.preco_total = +valor * +quantidade
       this.incluirInfo.id = idRandom()
+      this.incluirInfo.preco_produto = +valor
       this.data.push(this.incluirInfo)
       this.ordenar(this.data)
       this.incluirInfo = {
@@ -275,5 +288,10 @@ export default {
 <style>
 .icon-atualizar {
   display: flex;
+}
+#span {
+  background: none;
+  border: none;
+  color: #363636;
 }
 </style>
