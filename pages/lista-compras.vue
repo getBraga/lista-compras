@@ -5,6 +5,7 @@
         <strong>Lista de compras</strong>
       </h1>
     </div>
+
     <b-button type="is-primary" class="mb_20 mt_10" @click="modal = true"
       >Novo item</b-button
     >
@@ -122,7 +123,7 @@
 </template>
 
 <script>
-import { data } from '@/data/data'
+import { dados } from '@/data/data'
 import ModalIncluirListaVue from '~/components/ModalIncluirLista.vue'
 import idRandom from '~/mixins/idRandom'
 import { money } from '~/mixins/money'
@@ -171,11 +172,16 @@ export default {
   },
 
   mounted() {
-    this.ordenar(data)
+    this.ordenar(dados)
     if (!window.localStorage.listaCompras) {
-      window.localStorage.setItem('listaCompras', JSON.stringify(data))
+      window.localStorage.setItem('listaCompras', JSON.stringify(dados))
     }
+
     this.data = JSON.parse(window.localStorage.getItem('listaCompras'))
+    this.$store.commit(
+      'GETDADOS',
+      JSON.parse(window.localStorage.getItem('listaCompras'))
+    )
   },
 
   methods: {
@@ -190,6 +196,7 @@ export default {
           this.data.splice(this.data.indexOf(data), 1)
           this.$buefy.toast.open('Item deletado!')
           window.localStorage.setItem('listaCompras', JSON.stringify(this.data))
+          this.$store.dispatch('deletarLista')
         },
       })
     },
@@ -216,6 +223,10 @@ export default {
       this.data[index] = data
       data.podeAlterar = false
       window.localStorage.setItem('listaCompras', JSON.stringify(this.data))
+      this.$store.commit(
+        'UPDATEDADOS',
+        JSON.parse(window.localStorage.getItem('listaCompras'))
+      )
     },
     fecharModal() {
       this.modal = false
