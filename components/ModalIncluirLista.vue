@@ -1,13 +1,7 @@
 <template>
   <div>
-    <section v-if="modal" class="modal_default">
-      <form class="modal_container_default">
-        <b-button
-          class="modal_default_fechar"
-          type="is-primary"
-          @click="fecharModal"
-          >X</b-button
-        >
+    <ModalDefault :modal="modal" :fechar-modal="fecharModal">
+      <template #conteudo>
         <div class="mb_20">
           <label for="nomeProdutoValue">
             <p class="color_principal">Nome do item</p>
@@ -20,6 +14,7 @@
         <div class="mb_20">
           <label for="precoValue">
             <p class="color_principal">Preço do produto</p>
+
             <b-input v-model.lazy="precoValue" v-money="valor" />
           </label>
         </div>
@@ -29,25 +24,26 @@
             <b-input v-model="quantidadeValue" type="number" min="1" />
           </label>
         </div>
-
-        <div class="div_btn_modal_incluir">
-          <b-button
-            class="btn_modal_incluir"
-            type="is-primary"
-            :disabled="!nomeProdutoValue"
-            @click="incluirLista"
-            >Incluir</b-button
-          >
-        </div>
-      </form>
-    </section>
+      </template>
+      <template #btn>
+        <b-button
+          class="btn_modal_incluir"
+          type="is-primary"
+          @click="incluirLista"
+          >Incluir</b-button
+        >
+      </template>
+    </ModalDefault>
   </div>
 </template>
 
 <script>
+import ModalDefault from '~/components/component-default/ModalDefault.vue'
 import { money } from '~/mixins/money'
-
 export default {
+  components: {
+    ModalDefault,
+  },
   props: {
     modal: {
       type: Boolean,
@@ -89,9 +85,9 @@ export default {
 
   watch: {
     modal() {
-      this.nomeProdutoValue = this.nomeLista
-      this.precoValue = this.preco
-      this.quantidadeValue = this.quantidade
+      this.nomeProdutoValue = ''
+      this.precoValue = '0'
+      this.quantidadeValue = '1'
     },
     nomeProdutoValue() {
       this.$emit('update:nomeLista', this.nomeProdutoValue)
@@ -106,50 +102,4 @@ export default {
 }
 </script>
 
-<style scoped lang="scss">
-.modal_default::before {
-  content: '';
-  position: fixed;
-  top: 0px;
-  left: 0px;
-  width: 100%;
-  height: 100vh;
-  background: rgba(0, 0, 0, 0.5);
-}
-.modal_default {
-  position: absolute;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  top: 0px;
-  left: 0px;
-  width: 100%;
-  height: 100vh;
-  padding: 80px;
-  z-index: 60;
-}
-.modal_container_default {
-  position: fixed;
-  background: white;
-  width: 60%;
-  padding: 40px;
-  // z-index: 100;
-}
-.div_btn_modal_incluir {
-  display: flex;
-  align-items: center;
-  width: 100%;
-}
-.btn_modal_incluir {
-  margin: 0 auto;
-  width: 95%;
-}
-.modal_default_fechar {
-  position: absolute;
-  top: -15px;
-  right: -10px;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-}
-</style>
+<style></style>
