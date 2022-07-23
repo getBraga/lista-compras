@@ -24,5 +24,11 @@ export default {
 .manutencao {
   text-align: center;
   font-size: 5rem;
+  max-width: 100%;
+}
+@media screen and (max-width: 768px) {
+  .manutencao {
+    font-size: 2rem;
+  }
 }
 </style>
