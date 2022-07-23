@@ -1,6 +1,9 @@
 {
   "compilerOptions": {
+    "target": "ES2019",
+    "module": "esnext",
     "baseUrl": ".",
+    "jsx": "preserve",
     "paths": {
       "~/*": ["./*"],
       "@/*": ["./*"],
@@ -8,5 +11,6 @@
       "@@/*": ["./*"]
     }
   },
+ 
   "exclude": ["node_modules", ".nuxt", "dist"]
 }

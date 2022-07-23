@@ -1,6 +1,6 @@
 import criarId from '../mixins/idRandom'
 
-const data = [
+const dados = [
   {
     id: criarId(),
     nome_produto: 'Arroz',
@@ -99,4 +99,4 @@ const data = [
   },
 ]
 
-export { data }
+export { dados }
