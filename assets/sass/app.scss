@@ -10,6 +10,7 @@ strong {
   justify-content: flex-end;
   width: 100%;
 }
+
 .color_red{
   color: #ff3232;
 }
@@ -127,7 +128,12 @@ body {
     margin: 50px 11px 6px 11px;
     font-size: 1.9rem;
   }
-
+  .h1_titulo {
+    display: block;
+    h1 {
+      margin-left: 0;
+    }
+  }
   h4 {
     margin-bottom: 15px !important;
 
@@ -149,7 +155,7 @@ body {
     margin: 30px auto;
   }
 
-  
+
 
   /*Fix control table responsive*/
   .b-table {
@@ -181,4 +187,5 @@ body {
   background: none;
   border: none;
 }
+
 
