@@ -98,5 +98,28 @@ const dados = [
     podeAlterar: false,
   },
 ]
+const ListSaldos = [
+  {
+    id: criarId(),
+    nome_saldo: 'Vale alimentação',
+    valor_saldo: 650,
+    data: '2022/08/07',
+    podeAlterar: false,
+  },
 
-export { dados }
+  {
+    id: criarId(),
+    nome_saldo: 'Dinheiro extra',
+    valor_saldo: 200,
+    data: '2022/08/09',
+    podeAlterar: false,
+  },
+  {
+    id: criarId(),
+    nome_saldo: 'Sobra cartao',
+    valor_saldo: 200,
+    data: '2022/08/09',
+    podeAlterar: false,
+  },
+]
+export { dados, ListSaldos }
