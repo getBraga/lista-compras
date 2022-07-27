@@ -5,7 +5,7 @@
         <strong>Adicionar Saldo</strong>
       </h1>
     </div>
-    <!-- {{ lista }} -->
+
     <b-button type="is-primary" class="mb_20 mt_10" @click="modal = true"
       >Novo item</b-button
     >
@@ -129,11 +129,13 @@
         </div>
       </template>
     </b-table>
+    <h2 class="mt_5">Saldo {{ moedaLocal(total) }}</h2>
   </section>
 </template>
 
 <script>
 import ModalIncluirSaldoVue from '~/components/ModalIncluirSaldo.vue'
+import { ListSaldos } from '~/data/dados'
 import idRandom from '~/mixins/idRandom'
 import { money } from '~/mixins/money'
 export default {
@@ -154,37 +156,7 @@ export default {
       },
       date: new Date(),
       datetime: new Date(),
-      data: [
-        {
-          id: idRandom(),
-          nome_saldo: 'Vale alimentação',
-          valor_saldo: 650,
-          data: '2022/08/07',
-          podeAlterar: false,
-        },
-
-        {
-          id: idRandom(),
-          nome_saldo: 'Bolo Sara',
-          valor_saldo: 200,
-          data: '2022/08/09',
-          podeAlterar: false,
-        },
-        {
-          id: idRandom(),
-          nome_saldo: 'Dinheiro extra',
-          valor_saldo: 200,
-          data: '2022/08/09',
-          podeAlterar: false,
-        },
-        {
-          id: idRandom(),
-          nome_saldo: 'Sobra cartao',
-          valor_saldo: 200,
-          data: '2022/08/09',
-          podeAlterar: false,
-        },
-      ],
+      data: [],
     }
   },
 
@@ -192,16 +164,20 @@ export default {
     money() {
       return money
     },
-    lista() {
-      return this.$store.state.lista
+    total() {
+      let soma = 0
+      for (const index in this.data) {
+        soma += +this.data[index].valor_saldo
+      }
+
+      return soma
     },
   },
   watch: {},
   mounted() {
     if (!window.localStorage.listaSaldo) {
-      window.localStorage.setItem('listaSaldo', JSON.stringify(this.data))
+      window.localStorage.setItem('listaSaldo', JSON.stringify(ListSaldos))
     }
-
     this.data = JSON.parse(window.localStorage.getItem('listaSaldo'))
     this.ordenar(this.data)
   },
@@ -239,6 +215,7 @@ export default {
       const regex = /[.]/gi
       return valor.replace('R$', '').replace(regex, '').replace(',', '.')
     },
+
     formatarData(event) {
       const data = new Date(event)
       const ano = data.getFullYear()
@@ -269,8 +246,9 @@ export default {
       event.podeAlterar = true
     },
     alterar(event) {
+      const valor = this.regexFormater(this.alterarPreco)
       event.nome_saldo = this.alterarNome
-      event.valor_saldo = this.alterarPreco
+      event.valor_saldo = +valor
       event.data = this.datetime
       event.podeAlterar = false
       this.ordenar(this.data)
@@ -287,7 +265,6 @@ export default {
           this.$buefy.toast.open('Item deletado!')
           this.data.splice(this.data.indexOf(event), 1)
           window.localStorage.setItem('listaSaldo', JSON.stringify(this.data))
-          this.$store.dispatch('deletarLista')
         },
       })
     },
