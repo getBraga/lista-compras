@@ -155,7 +155,6 @@ export default {
         preco_total: '0',
         podeAlterar: false,
       },
-      gastar: 630,
 
       alterarNome: null,
       alterarPreco: null,
@@ -173,10 +172,19 @@ export default {
       for (const index in this.data) {
         total += +this.data[index].preco_total
       }
-      return this.moedaLocal(total)
+      return total
+    },
+    gastar() {
+      let total = 0
+      const saldo = JSON.parse(window.localStorage.getItem('listaSaldo'))
+      for (const index in saldo) {
+        total += saldo[index].valor_saldo
+      }
+
+      return total
     },
     saldo() {
-      return this.gastar - +this.regexFormater(this.total)
+      return this.gastar - this.total
     },
   },
 
