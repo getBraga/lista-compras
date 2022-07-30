@@ -18,6 +18,7 @@
 
 
 /*!
+<<<<<<< HEAD
  * The buffer module from node.js, for the browser.
  *
  * @author   Feross Aboukhadijeh <http://feross.org>
@@ -25,6 +26,8 @@
  */
 
 /*!
+=======
+>>>>>>> 81246cfab12bf4f053627123f2b063253d58e62f
  * vue-client-only v0.0.0-semantic-release
  * (c) 2021-present egoist <0x142857@gmail.com>
  * Released under the MIT License.
@@ -35,6 +38,7 @@
  * (c) 2018-present egoist <0x142857@gmail.com>
  * Released under the MIT License.
  */
+<<<<<<< HEAD
 
 /*! ieee754. BSD-3-Clause License. Feross Aboukhadijeh <https://feross.org/opensource> */
 
@@ -156,3 +160,5 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+=======
+>>>>>>> 81246cfab12bf4f053627123f2b063253d58e62f

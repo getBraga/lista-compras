@@ -126,7 +126,7 @@
         </div>
       </template>
     </b-table>
-    <h2 class="color_red">Total gasto {{ total }}</h2>
+    <h2 class="color_red">Total gasto {{ moedaLocal(total) }}</h2>
     <h2 class="mt_5">Para gastar {{ moedaLocal(gastar) }}</h2>
     <h2 class="mt_5" :class="saldo < 0 ? 'color_red' : ''">
       Saldo {{ moedaLocal(saldo) }}
