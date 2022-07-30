@@ -1,27 +1,13 @@
 export const state = () => ({
   login: false,
+  usuario: [],
   lista: [],
 })
 export const mutations = {
-  GET_DADOS(state, payload) {
-    state.lista = payload
-  },
-  UPDATE_DADOS(state, payload) {
-    state.lista = payload
-  },
-  DELETAR_LISTA(state, payload) {
-    state.lista = payload
+  GET_USUARIO(state, payload) {
+    state.login = true
+    state.usuario = payload
   },
 }
 
-export const actions = {
-  deletarLista({ commit }) {
-    commit(
-      'DELETAR_LISTA',
-      JSON.parse(window.localStorage.getItem('listaCompras'))
-    )
-  },
-  // getLista({ commit }) {
-  //   commit('GET_DADOS', JSON.parse(window.localStorage.getItem('listaCompras')))
-  // },
-}
+export const actions = {}
