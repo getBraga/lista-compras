@@ -195,10 +195,10 @@ export default {
     }
 
     this.data = JSON.parse(window.localStorage.getItem('listaCompras'))
-    this.$store.commit(
-      'GET_DADOS',
-      JSON.parse(window.localStorage.getItem('listaCompras'))
-    )
+    // this.$store.commit(
+    //   'GET_DADOS',
+    //   JSON.parse(window.localStorage.getItem('listaCompras'))
+    // )
   },
 
   methods: {
