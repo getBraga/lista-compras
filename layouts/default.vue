@@ -1,9 +1,9 @@
 <template>
   <div class="main">
     <div>
-      <TheHeader id="the_header" />
-      <div class="container">
-        <div class="section pt-5">
+      <TheHeader v-show="router" id="the_header" />
+      <div>
+        <div :class="router ? 'section pt-5' : ''">
           <nuxt />
         </div>
       </div>
@@ -20,7 +20,7 @@
         </a>
       </div> -->
     </div>
-    <Footer></Footer>
+    <Footer v-show="router"></Footer>
   </div>
 </template>
 
@@ -39,7 +39,26 @@ export default {
       windowTop: null,
     }
   },
+  computed: {
+    router() {
+      let resultado = true
+
+      if (this.$nuxt._route.name === 'login') {
+        resultado = false
+      }
+      return resultado
+    },
+  },
+  beforeUpdate() {
+    if (!window.localStorage.accessToken) {
+      this.$store.commit('GET_USUARIO', [])
+      this.$router.push({ name: 'login' })
+    }
+  },
   mounted() {
+    if (!window.localStorage.accessToken) {
+      this.$router.push({ name: 'login' })
+    }
     window.addEventListener('scroll', this.onScroll)
   },
   beforeDestroy() {
@@ -84,6 +103,7 @@ export default {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  width: 100%;
   min-height: 100vh;
 }
 
