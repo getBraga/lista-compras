@@ -1,5 +1,10 @@
 <template>
   <section>
+    <b-loading
+      v-model="isLoading"
+      :is-full-page="isFullPage"
+      :can-cancel="true"
+    ></b-loading>
     <div class="h1_titulo">
       <h1>
         <strong>Adicionar Saldo</strong>
@@ -39,7 +44,7 @@
 
       <b-table-column v-slot="props" sortable field="valor_saldo" label="Valor">
         <span v-if="!props.row.podeAlterar">
-          {{ moedaLocal(props.row.valor_saldo) }}
+          {{ moedaLocal(+props.row.valor_saldo) }}
         </span>
         <!-- <span v-if="!props.row.podeAlterar">
           <b-input v-model="props.row.preco_produto" v-money="money" />
@@ -134,9 +139,9 @@
 </template>
 
 <script>
+import services from '~/services/services'
 import ModalIncluirSaldoVue from '~/components/ModalIncluirSaldo.vue'
-import { ListSaldos } from '~/data/dados'
-import idRandom from '~/mixins/idRandom'
+
 import { money } from '~/mixins/money'
 export default {
   components: {
@@ -144,11 +149,14 @@ export default {
   },
   data() {
     return {
+      isLoading: false,
+      isFullPage: true,
+      dadosFireBase: null,
       modal: false,
       alterarNome: null,
       alterarPreco: '0',
       incluirSaldo: {
-        id: idRandom(),
+        id: null,
         nome_saldo: '',
         valor_saldo: '0',
         podeAlterar: false,
@@ -175,10 +183,7 @@ export default {
   },
   watch: {},
   mounted() {
-    if (!window.localStorage.listaSaldo) {
-      window.localStorage.setItem('listaSaldo', JSON.stringify(ListSaldos))
-    }
-    this.data = JSON.parse(window.localStorage.getItem('listaSaldo'))
+    this.getDados()
     this.ordenar(this.data)
   },
   methods: {
@@ -194,22 +199,57 @@ export default {
     fecharModal() {
       this.modal = false
     },
-    incluirSaldoLista() {
-      const valor = +this.regexFormater(this.incluirSaldo.valor_saldo)
-      this.incluirSaldo.valor_saldo = +valor
-      const data = this.formatarData(this.incluirSaldo.data)
-      this.incluirSaldo.data = data
-      this.data.push(this.incluirSaldo)
-      this.ordenar(this.data)
-      window.localStorage.setItem('listaSaldo', JSON.stringify(this.data))
-      this.incluirSaldo = {
-        id: idRandom(),
-        nome_saldo: '',
-        valor_saldo: '0',
-        data: new Date(),
-        podeAlterar: false,
+    async getDados() {
+      try {
+        this.isLoading = true
+        const { data } = await services.getData()
+        this.dadosFireBase = data
+        if (data) {
+          this.data = Object.keys(data).map((i) => data[i])
+          const key = Object.keys(data)
+          for (let i = 0; i < this.data.length; i++) {
+            this.data[i].id = key[i]
+          }
+        }
+        this.ordenar(this.data)
+        this.isLoading = false
+      } catch (error) {
+        this.isLoading = false
+        if (error.response.data.error === 'Auth token is expired') {
+          window.localStorage.accessToken = ''
+          this.$router.push({ name: 'login' })
+        }
       }
-      this.modal = false
+    },
+    async incluirSaldoLista() {
+      try {
+        this.isLoading = true
+        const valor = await this.regexFormater(this.incluirSaldo.valor_saldo)
+        this.incluirSaldo.valor_saldo = valor
+        const data = this.formatarData(this.incluirSaldo.data)
+        // this.incluirSaldo.id = id
+        this.incluirSaldo.data = new Date(data)
+        const paiId = await services.postData(this.incluirSaldo)
+        this.incluirSaldo.id = paiId.data.name
+        this.data.push(this.incluirSaldo)
+
+        this.ordenar(this.data)
+
+        this.incluirSaldo = {
+          nome_saldo: '',
+          valor_saldo: '0',
+          data: new Date(),
+          podeAlterar: false,
+        }
+        this.modal = false
+        this.isLoading = false
+      } catch (error) {
+        this.isLoading = false
+        if (error.response.data.error === 'Auth token is expired') {
+          window.localStorage.accessToken = ''
+          this.$router.push({ name: 'login' })
+        }
+      }
     },
     regexFormater(valor) {
       const regex = /[.]/gi
@@ -245,28 +285,47 @@ export default {
       this.datetime = new Date(event.data)
       event.podeAlterar = true
     },
-    alterar(event) {
-      const valor = this.regexFormater(this.alterarPreco)
-      event.nome_saldo = this.alterarNome
-      event.valor_saldo = +valor
-      event.data = this.datetime
-      event.podeAlterar = false
-      this.ordenar(this.data)
-      window.localStorage.setItem('listaSaldo', JSON.stringify(this.data))
+    async alterar(event) {
+      try {
+        this.isLoading = true
+        const valor = this.regexFormater(this.alterarPreco)
+        event.nome_saldo = this.alterarNome
+        event.valor_saldo = +valor
+        event.data = this.datetime
+        event.podeAlterar = false
+        await services.putData(event.id, event)
+        this.ordenar(this.data)
+        this.isLoading = false
+      } catch (error) {
+        this.isLoading = false
+        return error
+      }
     },
     excluir(event) {
-      this.$buefy.dialog.confirm({
-        title: 'Deletar item',
-        message: `Tem certeza que deseja excluir o item: ${event.nome_saldo}?`,
-        confirmText: 'Deletar',
-        type: 'is-danger',
-        hasIcon: true,
-        onConfirm: () => {
-          this.$buefy.toast.open('Item deletado!')
-          this.data.splice(this.data.indexOf(event), 1)
-          window.localStorage.setItem('listaSaldo', JSON.stringify(this.data))
-        },
-      })
+      try {
+        this.$buefy.dialog.confirm({
+          title: 'Deletar item',
+          message: `Tem certeza que deseja excluir o item: ${event.nome_saldo}?`,
+          confirmText: 'Deletar',
+          type: 'is-danger',
+          hasIcon: true,
+          onConfirm: async () => {
+            this.isLoading = true
+            this.$buefy.toast.open('Item deletado!')
+            const [data] = await this.data.splice(this.data.indexOf(event), 1)
+
+            await services.deleteData(data.id)
+            // console.log(teste, data)
+            // window.localStorage.setItem('listaSaldo', JSON.stringify(this.data))
+            this.isLoading = false
+          },
+        })
+      } catch (error) {
+        if (error.response.data.error === 'Auth token is expired') {
+          window.localStorage.accessToken = ''
+          this.$router.push({ name: 'login' })
+        }
+      }
     },
   },
 }
