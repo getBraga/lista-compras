@@ -56,10 +56,6 @@ export default {
           message: `${errorMessage}`,
           type: 'is-danger',
           hasIcon: true,
-          icon: 'times-circle',
-          iconPack: 'fa',
-          ariaRole: 'alertdialog',
-          ariaModal: true,
         })
       }
     },
