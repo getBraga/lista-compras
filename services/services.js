@@ -14,8 +14,6 @@ axiosIntance.interceptors.request.use(
     return config
   },
   function (error) {
-    window.localStorage.accessToken = ''
-
     return Promise.reject(error)
   }
 )
