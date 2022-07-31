@@ -139,9 +139,9 @@
 </template>
 
 <script>
+import VerifyErroCode from '../mixins/erroMessage'
 import services from '~/services/services'
 import ModalIncluirSaldoVue from '~/components/ModalIncluirSaldo.vue'
-
 import { money } from '~/mixins/money'
 export default {
   components: {
@@ -215,10 +215,22 @@ export default {
         this.isLoading = false
       } catch (error) {
         this.isLoading = false
-        if (error.response.data.error === 'Auth token is expired') {
-          window.localStorage.accessToken = ''
-          this.$router.push({ name: 'login' })
+        const errorCode = error.code
+        let errorMessage = VerifyErroCode(errorCode)
+
+        if (errorMessage == null) {
+          errorMessage = error.message
         }
+        this.$buefy.dialog.alert({
+          title: 'Error',
+          message: `${errorMessage}`,
+          type: 'is-danger',
+          hasIcon: true,
+          icon: 'times-circle',
+          iconPack: 'fa',
+          ariaRole: 'alertdialog',
+          ariaModal: true,
+        })
       }
     },
     async incluirSaldoLista() {
@@ -227,14 +239,11 @@ export default {
         const valor = await this.regexFormater(this.incluirSaldo.valor_saldo)
         this.incluirSaldo.valor_saldo = valor
         const data = this.formatarData(this.incluirSaldo.data)
-        // this.incluirSaldo.id = id
         this.incluirSaldo.data = new Date(data)
         const paiId = await services.postData(this.incluirSaldo)
         this.incluirSaldo.id = paiId.data.name
         this.data.push(this.incluirSaldo)
-
         this.ordenar(this.data)
-
         this.incluirSaldo = {
           nome_saldo: '',
           valor_saldo: '0',
@@ -245,10 +254,22 @@ export default {
         this.isLoading = false
       } catch (error) {
         this.isLoading = false
-        if (error.response.data.error === 'Auth token is expired') {
-          window.localStorage.accessToken = ''
-          this.$router.push({ name: 'login' })
+        const errorCode = error.code
+        let errorMessage = VerifyErroCode(errorCode)
+
+        if (errorMessage == null) {
+          errorMessage = error.message
         }
+        this.$buefy.dialog.alert({
+          title: 'Error',
+          message: `${errorMessage}`,
+          type: 'is-danger',
+          hasIcon: true,
+          icon: 'times-circle',
+          iconPack: 'fa',
+          ariaRole: 'alertdialog',
+          ariaModal: true,
+        })
       }
     },
     regexFormater(valor) {
@@ -298,7 +319,22 @@ export default {
         this.isLoading = false
       } catch (error) {
         this.isLoading = false
-        return error
+        const errorCode = error.code
+        let errorMessage = VerifyErroCode(errorCode)
+
+        if (errorMessage == null) {
+          errorMessage = error.message
+        }
+        this.$buefy.dialog.alert({
+          title: 'Error',
+          message: `${errorMessage}`,
+          type: 'is-danger',
+          hasIcon: true,
+          icon: 'times-circle',
+          iconPack: 'fa',
+          ariaRole: 'alertdialog',
+          ariaModal: true,
+        })
       }
     },
     excluir(event) {
@@ -313,18 +349,28 @@ export default {
             this.isLoading = true
             this.$buefy.toast.open('Item deletado!')
             const [data] = await this.data.splice(this.data.indexOf(event), 1)
-
             await services.deleteData(data.id)
-            // console.log(teste, data)
-            // window.localStorage.setItem('listaSaldo', JSON.stringify(this.data))
             this.isLoading = false
           },
         })
       } catch (error) {
-        if (error.response.data.error === 'Auth token is expired') {
-          window.localStorage.accessToken = ''
-          this.$router.push({ name: 'login' })
+        this.isLoading = false
+        const errorCode = error.code
+        let errorMessage = VerifyErroCode(errorCode)
+
+        if (errorMessage == null) {
+          errorMessage = error.message
         }
+        this.$buefy.dialog.alert({
+          title: 'Error',
+          message: `${errorMessage}`,
+          type: 'is-danger',
+          hasIcon: true,
+          icon: 'times-circle',
+          iconPack: 'fa',
+          ariaRole: 'alertdialog',
+          ariaModal: true,
+        })
       }
     },
   },
