@@ -5,7 +5,7 @@
       :is-full-page="isFullPage"
       :can-cancel="true"
     ></b-loading>
-    <h1>Lista de Compras</h1>
+    <h1 class="h1-titulo-login">Lista de Compras</h1>
     <form class="div-form">
       <b-field label="Email">
         <b-input
@@ -16,29 +16,34 @@
           placeholder="Email"
         />
       </b-field>
-      <b-field label="Password">
+      <b-field label="Senha">
         <b-input
           id="password"
           v-model="login.password"
           type="password"
           name="password"
           placeholder="Senha"
+          password-reveal
         />
       </b-field>
 
-      <!-- <router-link to="/redefinir-senha" id="redefinir"
+      <router-link id="redefinir" to="/redefinir-senha"
         >Esqueceu a senha?</router-link
-      > -->
-      <b-button class="btn" type="is-primary" @click.prevent="Login"
+      >
+      <b-button
+        class="btn"
+        type="is-primary"
+        :disabled="disable"
+        @click.prevent="Login"
         >Entrar</b-button
       >
-      <!-- <router-link to="/cadastrar" id="cadastrar">Cadastre-se</router-link> -->
-      <!-- <button class="btn" @click.prevent="LoginUserFaceBook">Facebook</button> -->
+      <nuxt-link id="cadastrar" to="/cadastrar">Cadastre-se</nuxt-link>
     </form>
   </section>
 </template>
 
 <script>
+import VerifyErroCode from '../mixins/erroMessage'
 export default {
   name: 'LoginDefault',
   data() {
@@ -53,7 +58,16 @@ export default {
       },
     }
   },
-
+  computed: {
+    // eslint-disable-next-line vue/return-in-computed-property
+    disable() {
+      let disabled = false
+      this.login.email <= 0 || this.login.password <= 0
+        ? (disabled = true)
+        : (disabled = false)
+      return disabled
+    },
+  },
   methods: {
     Login() {
       this.isLoading = true
@@ -70,11 +84,17 @@ export default {
           this.$store.commit('GET_USUARIO', data)
           this.$router.push({ name: 'index' })
         })
-        .catch(() => {
+        .catch((error) => {
           this.isLoading = false
+          const errorCode = error.code
+          let errorMessage = VerifyErroCode(errorCode)
+
+          if (errorMessage == null) {
+            errorMessage = error.message
+          }
           this.$buefy.dialog.alert({
             title: 'Error',
-            message: `Email ou Senha Invalido!`,
+            message: `${errorMessage}`,
             type: 'is-danger',
             hasIcon: true,
             icon: 'times-circle',
@@ -135,21 +155,11 @@ h1 {
   display: flex;
   flex-direction: column;
 }
-label {
-  margin-top: 10px;
-  font-size: 0.875rem;
-}
+
 .btn {
   margin-top: 10px;
 }
-input {
-  margin-top: 5px;
-  padding: 10px;
-  font-size: 1rem;
-  background: #fff;
-  border: 1px solid rgb(192, 182, 182);
-  outline-color: #7f3f1f;
-}
+
 #redefinir {
   margin: 10px 0;
   text-transform: none;
@@ -162,5 +172,8 @@ input {
   text-transform: none;
   color: #7f3f1f;
   text-align: center;
+}
+.h1-titulo-login {
+  font-size: 1.8rem;
 }
 </style>
