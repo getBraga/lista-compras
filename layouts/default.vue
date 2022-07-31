@@ -43,20 +43,34 @@ export default {
     router() {
       let resultado = true
 
-      if (this.$nuxt._route.name === 'login') {
+      if (
+        this.$nuxt._route.name === 'login' ||
+        this.$nuxt._route.name === 'cadastrar' ||
+        this.$route.name === 'redefinir-senha'
+      ) {
         resultado = false
       }
       return resultado
     },
   },
   beforeUpdate() {
-    if (!window.localStorage.accessToken) {
+    if (
+      !window.localStorage.accessToken &&
+      this.$route.name !== 'cadastrar' &&
+      this.$route.name !== 'redefinir-senha'
+    ) {
       this.$store.commit('GET_USUARIO', [])
+
       this.$router.push({ name: 'login' })
     }
   },
   mounted() {
-    if (!window.localStorage.accessToken) {
+    if (
+      !window.localStorage.accessToken &&
+      this.$route.name !== 'cadastrar' &&
+      this.$route.name !== 'redefinir-senha'
+    ) {
+      this.$store.commit('GET_USUARIO', [])
       this.$router.push({ name: 'login' })
     }
     window.addEventListener('scroll', this.onScroll)
