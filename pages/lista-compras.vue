@@ -1,5 +1,10 @@
 <template>
   <section>
+    <b-loading
+      v-model="isLoading"
+      :is-full-page="isFullPage"
+      :can-cancel="true"
+    ></b-loading>
     <div class="h1_titulo">
       <h1>
         <strong>Lista de compras</strong>
@@ -46,7 +51,7 @@
         label="Preço"
       >
         <span v-if="!props.row.podeAlterar">
-          {{ moedaLocal(props.row.preco_produto) }}
+          {{ moedaLocal(+props.row.preco_produto) }}
         </span>
         <!-- <span v-if="!props.row.podeAlterar">
           <b-input v-model="props.row.preco_produto" v-money="money" />
@@ -127,18 +132,19 @@
       </template>
     </b-table>
     <h2 class="color_red">Total gasto {{ moedaLocal(total) }}</h2>
-    <h2 class="mt_5">Para gastar {{ moedaLocal(gastar) }}</h2>
-    <h2 class="mt_5" :class="saldo < 0 ? 'color_red' : ''">
-      Saldo {{ moedaLocal(saldo) }}
+    <h2 class="mt_5">Para gastar {{ moedaLocal(saldoIncluido) }}</h2>
+    <h2 class="mt_5" :class="saldoParaGastar < 0 ? 'color_red' : ''">
+      Saldo: {{ moedaLocal(saldoParaGastar) }}
     </h2>
   </section>
 </template>
 
 <script>
-import { dados } from '@/data/dados'
+import VerifyErroCode from '../mixins/erroMessage'
+import tokenExpirado from '../mixins/tokenExpirado'
 import ModalIncluirListaVue from '~/components/ModalIncluirLista.vue'
-import idRandom from '~/mixins/idRandom'
 import { money } from '~/mixins/money'
+import services from '~/services/services'
 
 export default {
   components: {
@@ -146,9 +152,10 @@ export default {
   },
   data() {
     return {
+      isLoading: false,
+      isFullPage: true,
       data: [],
       incluirInfo: {
-        id: idRandom(),
         nome_produto: '',
         preco_produto: '0',
         quantidade: '1',
@@ -167,6 +174,9 @@ export default {
     money() {
       return money
     },
+    saldoIncluido() {
+      return this.$store.state.saldo
+    },
     total() {
       let total = 0
       for (const index in this.data) {
@@ -183,47 +193,196 @@ export default {
 
       return total
     },
-    saldo() {
-      return this.gastar - this.total
+    saldoParaGastar() {
+      return this.saldoIncluido - this.total
     },
   },
 
   mounted() {
-    this.ordenar(dados)
-    if (!window.localStorage.listaCompras) {
-      window.localStorage.setItem('listaCompras', JSON.stringify(dados))
-    }
-
-    this.data = JSON.parse(window.localStorage.getItem('listaCompras'))
-    // this.$store.commit(
-    //   'GET_DADOS',
-    //   JSON.parse(window.localStorage.getItem('listaCompras'))
-    // )
+    this.getDados()
+    this.getSaldo()
   },
 
   methods: {
-    excluir(data) {
-      this.$buefy.dialog.confirm({
-        title: 'Deletar item',
-        message: `Tem certeza que deseja excluir o item ${data.nome_produto}?`,
-        confirmText: 'Deletar',
-        type: 'is-danger',
-        hasIcon: true,
-        onConfirm: () => {
-          this.data.splice(this.data.indexOf(data), 1)
-          this.$buefy.toast.open('Item deletado!')
-          window.localStorage.setItem('listaCompras', JSON.stringify(this.data))
-          this.$store.dispatch('deletarLista')
-        },
-      })
+    async getDados() {
+      try {
+        this.isLoading = true
+        const { data } = await services.getLista()
+        this.dadosFireBase = data
+        if (data) {
+          this.data = Object.keys(data).map((i) => data[i])
+          const key = Object.keys(data)
+          for (let i = 0; i < this.data.length; i++) {
+            this.data[i].id = key[i]
+          }
+        }
+
+        this.ordenar(this.data)
+        this.isLoading = false
+      } catch (error) {
+        this.isLoading = false
+        const errorCode = error.code
+        let errorMessage = VerifyErroCode(errorCode)
+
+        if (errorMessage == null) {
+          if (error.response)
+            errorMessage = tokenExpirado(error.response.data.error)
+          else errorMessage = error.message
+        }
+        this.$buefy.dialog.alert({
+          title: 'Error',
+          message: `${errorMessage}`,
+          type: 'is-danger',
+          hasIcon: true,
+        })
+      }
     },
+    async getSaldo() {
+      try {
+        this.isLoading = true
+        const { data } = await services.getData()
+        let saldo = data
+
+        if (data) {
+          saldo = Object.keys(data).map((i) => data[i])
+          const key = Object.keys(data)
+          for (let i = 0; i < saldo; i++) {
+            saldo[i].id = key[i]
+          }
+        }
+        this.$store.commit('GET_SALDO', saldo)
+        this.isLoading = false
+      } catch (error) {
+        this.isLoading = false
+        const errorCode = error.code
+        let errorMessage = VerifyErroCode(errorCode)
+
+        if (errorMessage == null) {
+          if (error.response)
+            errorMessage = tokenExpirado(error.response.data.error)
+          else errorMessage = error.message
+        }
+        this.$buefy.dialog.alert({
+          title: 'Error',
+          message: `${errorMessage}`,
+          type: 'is-danger',
+          hasIcon: true,
+        })
+      }
+    },
+    async incluirLista() {
+      try {
+        this.isLoading = true
+        const valor = this.regexFormater(this.incluirInfo.preco_produto)
+        this.incluirInfo.preco_produto = valor
+        const quantidade = +this.incluirInfo.quantidade
+        this.incluirInfo.preco_total = +valor * +quantidade
+        const { data } = await services.postLista(this.incluirInfo)
+        this.incluirInfo.id = data.name
+        this.data.push(this.incluirInfo)
+        this.ordenar(this.data)
+        this.incluirInfo = {
+          nome_produto: '',
+          preco_produto: '0',
+          quantidade: '1',
+          preco_total: '0',
+          podeAlterar: false,
+        }
+        this.modal = false
+        this.isLoading = false
+      } catch (error) {
+        this.isLoading = false
+        const errorCode = error.code
+        let errorMessage = VerifyErroCode(errorCode)
+
+        if (errorMessage == null) {
+          if (error.response) {
+            errorMessage = tokenExpirado(error.response.data.error)
+          } else errorMessage = error.message
+        }
+        this.$buefy.dialog.alert({
+          title: 'Error',
+          message: `${errorMessage}`,
+          type: 'is-danger',
+          hasIcon: true,
+        })
+      }
+    },
+    async alterar(data) {
+      try {
+        this.isLoading = true
+
+        const index = this.data.indexOf(data)
+        const regexPreco = this.regexFormater(this.alterarPreco)
+        data.nome_produto = this.alterarNome
+        data.preco_produto = regexPreco
+        data.quantidade = this.alterarQuantidade
+        data.preco_total = +regexPreco * data.quantidade
+        data.podeAlterar = false
+        this.data[index] = data
+
+        await services.putLista(data.id, data)
+        this.ordenar(this.data)
+        this.isLoading = false
+      } catch (error) {
+        this.isLoading = false
+        const errorCode = error.code
+        let errorMessage = VerifyErroCode(errorCode)
+
+        if (errorMessage == null) {
+          if (error.response)
+            errorMessage = tokenExpirado(error.response.data.error)
+          else errorMessage = error.message
+        }
+        this.$buefy.dialog.alert({
+          title: 'Error',
+          message: `${errorMessage}`,
+          type: 'is-danger',
+          hasIcon: true,
+        })
+      }
+    },
+    excluir(event) {
+      try {
+        this.$buefy.dialog.confirm({
+          title: 'Deletar item',
+          message: `Tem certeza que deseja excluir o item ${event.nome_produto}?`,
+          confirmText: 'Deletar',
+          type: 'is-danger',
+          hasIcon: true,
+          onConfirm: async () => {
+            this.isLoading = true
+            const [data] = await this.data.splice(this.data.indexOf(event), 1)
+            await services.deleteLista(data.id)
+            this.$buefy.toast.open('Item deletado!')
+            this.isLoading = false
+          },
+        })
+      } catch (error) {
+        this.isLoading = false
+        const errorCode = error.code
+        let errorMessage = VerifyErroCode(errorCode)
+
+        if (errorMessage == null) {
+          if (error.response)
+            errorMessage = tokenExpirado(error.response.data.error)
+          else errorMessage = error.message
+        }
+        this.$buefy.dialog.alert({
+          title: 'Error',
+          message: `${errorMessage}`,
+          type: 'is-danger',
+          hasIcon: true,
+        })
+      }
+    },
+
     ativarAlterar(data) {
       this.data.forEach((inf) => {
         if (inf.podeAlterar) {
           inf.podeAlterar = false
         }
       })
-
       this.alterarNome = data.nome_produto
       this.alterarPreco = this.moedaLocal(data.preco_produto)
       this.alterarQuantidade = data.quantidade
@@ -232,22 +391,7 @@ export default {
     cancel(data) {
       data.podeAlterar = false
     },
-    alterar(data) {
-      const index = this.data.indexOf(data)
-      const regexPreco = this.regexFormater(this.alterarPreco)
-      data.nome_produto = this.alterarNome
-      data.preco_produto = this.alterarPreco
-      data.quantidade = this.alterarQuantidade
 
-      data.preco_total = +regexPreco * data.quantidade
-      this.data[index] = data
-      data.podeAlterar = false
-      window.localStorage.setItem('listaCompras', JSON.stringify(this.data))
-      this.$store.commit(
-        'UPDATE_DADOS',
-        JSON.parse(window.localStorage.getItem('listaCompras'))
-      )
-    },
     fecharModal() {
       this.modal = false
     },
@@ -270,24 +414,6 @@ export default {
           ? -1
           : 0
       )
-    },
-    incluirLista() {
-      const valor = +this.regexFormater(this.incluirInfo.preco_produto)
-      const quantidade = +this.incluirInfo.quantidade
-      this.incluirInfo.preco_total = +valor * +quantidade
-      this.incluirInfo.id = idRandom()
-      this.incluirInfo.preco_produto = +valor
-      this.data.push(this.incluirInfo)
-      this.ordenar(this.data)
-      this.incluirInfo = {
-        nome_produto: '',
-        preco_produto: '0',
-        quantidade: '1',
-        preco_total: '0',
-        podeAlterar: false,
-      }
-      window.localStorage.setItem('listaCompras', JSON.stringify(this.data))
-      this.modal = false
     },
   },
 }
