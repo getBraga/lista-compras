@@ -65,7 +65,9 @@ export default {
     },
   },
   async created() {
-    await this.$store.dispatch('getUsuario')
+    // eslint-disable-next-line nuxt/no-globals-in-created
+    if (window.localStorage.uid && window.localStorage.accessToken)
+      await this.$store.dispatch('getUsuario')
   },
   methods: {
     sair() {
