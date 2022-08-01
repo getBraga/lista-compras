@@ -48,6 +48,11 @@ export default {
       `/${window.localStorage.uid}/saldos.json?auth=${window.localStorage.accessToken}`
     )
   },
+  getLista() {
+    return api.get(
+      `/${window.localStorage.uid}/lista.json?auth=${window.localStorage.accessToken}`
+    )
+  },
   postDadosUsuarios(payload) {
     return api.post(
       `/${window.localStorage.uid}/dados-usuarios.json?auth=${window.localStorage.accessToken}`,
@@ -60,14 +65,31 @@ export default {
       body
     )
   },
+  postLista(body) {
+    return api.post(
+      `/${window.localStorage.uid}/lista.json?auth=${window.localStorage.accessToken}`,
+      body
+    )
+  },
   deleteData(id) {
     return api.delete(
-      `/${window.localStorage.uid}//saldos/${id}.json?auth=${window.localStorage.accessToken}`
+      `/${window.localStorage.uid}/saldos/${id}.json?auth=${window.localStorage.accessToken}`
+    )
+  },
+  deleteLista(id) {
+    return api.delete(
+      `/${window.localStorage.uid}/lista/${id}.json?auth=${window.localStorage.accessToken}`
     )
   },
   putData(id, payload) {
     return api.put(
-      `/${window.localStorage.uid}//saldos/${id}.json?auth=${window.localStorage.accessToken}`,
+      `/${window.localStorage.uid}/saldos/${id}.json?auth=${window.localStorage.accessToken}`,
+      payload
+    )
+  },
+  putLista(id, payload) {
+    return api.put(
+      `/${window.localStorage.uid}/lista/${id}.json?auth=${window.localStorage.accessToken}`,
       payload
     )
   },
