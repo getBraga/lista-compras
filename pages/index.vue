@@ -1,5 +1,10 @@
 <template>
   <section>
+    <b-loading
+      v-model="isLoading"
+      :is-full-page="isFullPage"
+      :can-cancel="true"
+    ></b-loading>
     <h1 class="manutencao">
       <strong
         >Em manutenção...
@@ -18,6 +23,19 @@
 export default {
   name: 'IndexPage',
   components: {},
+
+  data() {
+    return {
+      isLoading: false,
+      isFullPage: true,
+    }
+  },
+  async created() {
+    this.isLoading = true
+    await this.$store.dispatch('getUsuario')
+    this.isLoading = false
+  },
+  methods: {},
 }
 </script>
 <style lang="scss">
