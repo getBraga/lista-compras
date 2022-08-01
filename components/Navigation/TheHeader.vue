@@ -29,23 +29,22 @@
       </template>
 
       <template slot="end">
-        <b-navbar-item
-          id="navbar_item"
-          tag="router-link"
-          to="/login"
-          class="mr-10"
-        >
-          <b-tooltip label="Logout" position="is-bottom">
-            <b-button class="btn_icon" @click="sair">
-              <b-icon
-                icon="power"
-                class="icon_primary icon-padding"
-                type="is-primary"
-                size="is-medium"
-              ></b-icon
-            ></b-button>
-          </b-tooltip>
-        </b-navbar-item>
+        <b-dropdown aria-role="list" position="is-bottom-left">
+          <template #trigger="{ active }">
+            <b-button
+              :label="nome"
+              type="is-primary"
+              :icon-right="active ? 'menu-up' : 'menu-down'"
+            />
+          </template>
+
+          <b-navbar-item tag="router-link" to="/login" class="mr-10">
+            <b-button class="btn_icon icon_primary icon-padding" @click="sair">
+              <b-icon icon="power" type="is-primary" size="is-small"></b-icon
+              ><nuxt-link to="#">Logout</nuxt-link></b-button
+            >
+          </b-navbar-item>
+        </b-dropdown>
       </template>
     </b-navbar>
   </div>
@@ -60,12 +59,21 @@ export default {
       isFullPage: true,
     }
   },
+  computed: {
+    nome() {
+      return this.$store.state.usuario.primeiroNome
+    },
+  },
+  async created() {
+    await this.$store.dispatch('getUsuario')
+  },
   methods: {
     sair() {
       try {
         this.isLoading = true
         this.$store.commit('GET_USUARIO', [])
         window.localStorage.accessToken = ''
+        window.localStorage.uid = ''
         this.isLoading = false
       } catch (error) {
         return error
