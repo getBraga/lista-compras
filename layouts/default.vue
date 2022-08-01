@@ -55,21 +55,30 @@ export default {
   },
   beforeUpdate() {
     if (
-      !window.localStorage.accessToken &&
-      this.$route.name !== 'cadastrar' &&
-      this.$route.name !== 'redefinir-senha'
+      (!window.localStorage.uid &&
+        this.$route.name !== 'cadastrar' &&
+        this.$route.name !== 'redefinir-senha') ||
+      (!window.localStorage.accessToken &&
+        this.$route.name !== 'cadastrar' &&
+        this.$route.name !== 'redefinir-senha')
     ) {
       this.$store.commit('GET_USUARIO', [])
-
+      window.localStorage.uid = ''
+      window.localStorage.accessToken = ''
       this.$router.push({ name: 'login' })
     }
   },
   mounted() {
     if (
-      !window.localStorage.accessToken &&
-      this.$route.name !== 'cadastrar' &&
-      this.$route.name !== 'redefinir-senha'
+      (!window.localStorage.uid &&
+        this.$route.name !== 'cadastrar' &&
+        this.$route.name !== 'redefinir-senha') ||
+      (!window.localStorage.accessToken &&
+        this.$route.name !== 'cadastrar' &&
+        this.$route.name !== 'redefinir-senha')
     ) {
+      window.localStorage.uid = ''
+      window.localStorage.accessToken = ''
       this.$store.commit('GET_USUARIO', [])
       this.$router.push({ name: 'login' })
     }
