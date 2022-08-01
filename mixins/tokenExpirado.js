@@ -3,6 +3,7 @@ export default function tokenExpirado(request) {
     request = 'O token do usuário atual expirou.'
     window.localStorage.accessToken = ''
     window.localStorage.uid = ''
+    window.location.reload()
   }
   return request
 }
