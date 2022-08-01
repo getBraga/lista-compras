@@ -1,5 +1,10 @@
 <template>
   <div>
+    <b-loading
+      v-model="isLoading"
+      :is-full-page="isFullPage"
+      :can-cancel="true"
+    ></b-loading>
     <section class="login">
       <h1 class="h1-titulo-login">Cadastro</h1>
       <form class="div-form">
@@ -50,6 +55,8 @@
 
 <script>
 import VerifyErroCode from '../mixins/erroMessage'
+import tokenExpirado from '../mixins/tokenExpirado'
+import service from '../services/services'
 export default {
   name: 'CreateUser',
   // components: {
@@ -57,9 +64,8 @@ export default {
   // },
   data() {
     return {
-      loading: false,
-      token: '',
-      logar: this.$store.state.login,
+      isLoading: false,
+      isFullPage: true,
       login: {
         email: '',
         password: '',
@@ -82,7 +88,14 @@ export default {
   methods: {
     async createNewUser() {
       try {
+        this.isLoading = true
         const name = this.login.name
+        const dto = {
+          nome: '',
+          email: null,
+        }
+        window.localStorage.accessToken = ''
+        window.localStorage.uid = ''
 
         await this.$firebase
           .auth()
@@ -91,17 +104,55 @@ export default {
             user.updateProfile({
               displayName: name,
             })
+
+            window.localStorage.setItem(
+              'accessToken',
+              user.multiFactor.user.accessToken
+            )
+            window.localStorage.setItem('uid', user.multiFactor.user.uid)
+
+            dto.nome = name
+            dto.email = user.multiFactor.user.email
+            // email
           })
+
         await this.$buefy.dialog.alert('Usuário cadastrado com sucesso!')
+        await this.dtoPost(dto)
         this.login.name = ''
         this.login.email = ''
         this.login.password = ''
+        this.isLoading = false
       } catch (error) {
+        this.isLoading = false
         const errorCode = error.code
         let errorMessage = VerifyErroCode(errorCode)
 
         if (errorMessage == null) {
-          errorMessage = error.message
+          errorMessage = tokenExpirado(error.response.data.error)
+        }
+        this.$buefy.dialog.alert({
+          title: 'Error',
+          message: `${errorMessage}`,
+          type: 'is-danger',
+          hasIcon: true,
+        })
+      }
+    },
+    async dtoPost(data) {
+      try {
+        this.isLoading = true
+        await service.postDadosUsuarios(data)
+        window.localStorage.accessToken = ''
+        window.localStorage.uid = ''
+        this.isLoading = false
+      } catch (error) {
+        this.isLoading = false
+        this.isLoading = false
+        const errorCode = error.code
+        let errorMessage = VerifyErroCode(errorCode)
+
+        if (errorMessage == null) {
+          errorMessage = tokenExpirado(error.response.data.error)
         }
         this.$buefy.dialog.alert({
           title: 'Error',
