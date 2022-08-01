@@ -1,8 +1,11 @@
 import axios from 'axios'
 
 const axiosIntance = axios.create({
-  baseURL: `${process.env.BASE_URL}/${window.localStorage.uid}`,
-  headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+  baseURL: `${process.env.BASE_URL}`,
+  headers: {
+    'Content-Type': 'application/json',
+    Accept: 'application/json',
+  },
 })
 axiosIntance.interceptors.request.use(
   function (config) {
@@ -34,23 +37,37 @@ const api = {
 }
 
 export default {
+  getUser() {
+    return api.get(
+      `/${window.localStorage.uid}/dados-usuarios.json?auth=${window.localStorage.accessToken}`
+    )
+  },
+
   getData() {
-    return api.get(`/saldos.json?auth=${window.localStorage.accessToken}`)
+    return api.get(
+      `/${window.localStorage.uid}/saldos.json?auth=${window.localStorage.accessToken}`
+    )
+  },
+  postDadosUsuarios(payload) {
+    return api.post(
+      `/${window.localStorage.uid}/dados-usuarios.json?auth=${window.localStorage.accessToken}`,
+      payload
+    )
   },
   postData(body) {
     return api.post(
-      `/saldos.json?auth=${window.localStorage.accessToken}`,
+      `/${window.localStorage.uid}/saldos.json?auth=${window.localStorage.accessToken}`,
       body
     )
   },
   deleteData(id) {
     return api.delete(
-      `/saldos/${id}.json?auth=${window.localStorage.accessToken}`
+      `/${window.localStorage.uid}//saldos/${id}.json?auth=${window.localStorage.accessToken}`
     )
   },
   putData(id, payload) {
     return api.put(
-      `/saldos/${id}.json?auth=${window.localStorage.accessToken}`,
+      `/${window.localStorage.uid}//saldos/${id}.json?auth=${window.localStorage.accessToken}`,
       payload
     )
   },
