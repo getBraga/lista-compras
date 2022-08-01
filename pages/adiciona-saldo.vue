@@ -10,7 +10,6 @@
         <strong>Adicionar Saldo</strong>
       </h1>
     </div>
-
     <b-button type="is-primary" class="mb_20 mt_10" @click="modal = true"
       >Novo item</b-button
     >
@@ -178,11 +177,14 @@ export default {
       for (const index in this.data) {
         soma += +this.data[index].valor_saldo
       }
-
       return soma
     },
   },
-  watch: {},
+  watch: {
+    total() {
+      this.$store.commit('GET_SALDO', this.data)
+    },
+  },
   mounted() {
     this.getDados()
     this.ordenar(this.data)
@@ -213,15 +215,18 @@ export default {
             this.data[i].id = key[i]
           }
         }
+
         this.ordenar(this.data)
+
         this.isLoading = false
       } catch (error) {
         this.isLoading = false
         const errorCode = error.code
         let errorMessage = VerifyErroCode(errorCode)
-
         if (errorMessage == null) {
-          errorMessage = tokenExpirado(error.response.data.error)
+          if (error.response)
+            errorMessage = tokenExpirado(error.response.data.error)
+          else errorMessage = error.message
         }
         this.$buefy.dialog.alert({
           title: 'Error',
@@ -249,6 +254,7 @@ export default {
           podeAlterar: false,
         }
         this.modal = false
+
         this.isLoading = false
       } catch (error) {
         this.isLoading = false
@@ -256,7 +262,9 @@ export default {
         let errorMessage = VerifyErroCode(errorCode)
 
         if (errorMessage == null) {
-          errorMessage = tokenExpirado(error.response.data.error)
+          if (error.response)
+            errorMessage = tokenExpirado(error.response.data.error)
+          else errorMessage = error.message
         }
         this.$buefy.dialog.alert({
           title: 'Error',
@@ -317,7 +325,9 @@ export default {
         let errorMessage = VerifyErroCode(errorCode)
 
         if (errorMessage == null) {
-          errorMessage = tokenExpirado(error.response.data.error)
+          if (error.response)
+            errorMessage = tokenExpirado(error.response.data.error)
+          else errorMessage = error.message
         }
         this.$buefy.dialog.alert({
           title: 'Error',
@@ -337,9 +347,9 @@ export default {
           hasIcon: true,
           onConfirm: async () => {
             this.isLoading = true
-            this.$buefy.toast.open('Item deletado!')
             const [data] = await this.data.splice(this.data.indexOf(event), 1)
             await services.deleteData(data.id)
+            this.$buefy.toast.open('Item deletado!')
             this.isLoading = false
           },
         })
@@ -349,7 +359,9 @@ export default {
         let errorMessage = VerifyErroCode(errorCode)
 
         if (errorMessage == null) {
-          errorMessage = tokenExpirado(error.response.data.error)
+          if (error.response)
+            errorMessage = tokenExpirado(error.response.data.error)
+          else errorMessage = error.message
         }
         this.$buefy.dialog.alert({
           title: 'Error',
