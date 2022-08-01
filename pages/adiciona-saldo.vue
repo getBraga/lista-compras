@@ -140,6 +140,7 @@
 
 <script>
 import VerifyErroCode from '../mixins/erroMessage'
+import tokenExpirado from '../mixins/tokenExpirado'
 import services from '~/services/services'
 import ModalIncluirSaldoVue from '~/components/ModalIncluirSaldo.vue'
 import { money } from '~/mixins/money'
@@ -203,6 +204,7 @@ export default {
       try {
         this.isLoading = true
         const { data } = await services.getData()
+
         this.dadosFireBase = data
         if (data) {
           this.data = Object.keys(data).map((i) => data[i])
@@ -219,17 +221,13 @@ export default {
         let errorMessage = VerifyErroCode(errorCode)
 
         if (errorMessage == null) {
-          errorMessage = error.message
+          errorMessage = tokenExpirado(error.response.data.error)
         }
         this.$buefy.dialog.alert({
           title: 'Error',
           message: `${errorMessage}`,
           type: 'is-danger',
           hasIcon: true,
-          icon: 'times-circle',
-          iconPack: 'fa',
-          ariaRole: 'alertdialog',
-          ariaModal: true,
         })
       }
     },
@@ -258,7 +256,7 @@ export default {
         let errorMessage = VerifyErroCode(errorCode)
 
         if (errorMessage == null) {
-          errorMessage = error.message
+          errorMessage = tokenExpirado(error.response.data.error)
         }
         this.$buefy.dialog.alert({
           title: 'Error',
@@ -319,7 +317,7 @@ export default {
         let errorMessage = VerifyErroCode(errorCode)
 
         if (errorMessage == null) {
-          errorMessage = error.message
+          errorMessage = tokenExpirado(error.response.data.error)
         }
         this.$buefy.dialog.alert({
           title: 'Error',
@@ -351,7 +349,7 @@ export default {
         let errorMessage = VerifyErroCode(errorCode)
 
         if (errorMessage == null) {
-          errorMessage = error.message
+          errorMessage = tokenExpirado(error.response.data.error)
         }
         this.$buefy.dialog.alert({
           title: 'Error',
