@@ -78,7 +78,7 @@ export default {
         .then((data) => {
           window.localStorage.uid = data.user.uid
 
-          window.localStorage.refreshToken = data.user.refreshToken
+          // window.localStorage.refreshToken = data.user.refreshToken
           window.localStorage.accessToken =
             data.user.multiFactor.user.accessToken
           this.$store.commit('GET_USUARIO', data)
