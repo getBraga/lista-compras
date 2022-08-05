@@ -33,9 +33,13 @@ export default {
   async created() {
     this.isLoading = true
     // eslint-disable-next-line nuxt/no-globals-in-created
-    if (window.localStorage.uid && window.localStorage.accessToken)
+    if (window.localStorage.uid && window.localStorage.accessToken) {
       await this.$store.dispatch('getUsuario')
-    this.isLoading = false
+      this.isLoading = false
+    } else {
+      this.$router.push({ name: 'login' })
+      this.isLoading = false
+    }
   },
   methods: {},
 }
