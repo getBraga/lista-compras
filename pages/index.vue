@@ -31,11 +31,20 @@ export default {
     }
   },
   async created() {
-    this.isLoading = true
-    // eslint-disable-next-line nuxt/no-globals-in-created
-    if (window.localStorage.uid && window.localStorage.accessToken)
+    try {
       await this.$store.dispatch('getUsuario')
-    this.isLoading = false
+      this.isLoading = false
+    } catch (error) {
+      // eslint-disable-next-line nuxt/no-globals-in-created
+      window.localStorage.accessToken = ''
+      // eslint-disable-next-line nuxt/no-globals-in-created
+      window.localStorage.uid = ''
+      // eslint-disable-next-line nuxt/no-globals-in-created
+      window.localStorage.token = ''
+      this.isLoading = true
+      this.$router.push({ name: 'login' })
+      this.isLoading = false
+    }
   },
   methods: {},
 }
