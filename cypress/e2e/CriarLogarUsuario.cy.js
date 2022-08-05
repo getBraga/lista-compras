@@ -1,8 +1,8 @@
 /* eslint-disable no-undef */
-
+import { Env } from '../../apiKeyEnv'
 /// <reference types="cypress" />
 
-const apiKey = 'AIzaSyD-71clEQrpIlbH0T47fVg6GUe96ZuWJUY'
+const apiKey = Env()
 const login = {
   email: 'teste@teste.com',
   password: 123456,
