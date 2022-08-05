@@ -42,8 +42,8 @@ export default {
       // eslint-disable-next-line nuxt/no-globals-in-created
       window.localStorage.token = ''
       this.isLoading = true
+
       this.$router.push({ name: 'login' })
-      this.isLoading = false
     }
   },
   methods: {},
